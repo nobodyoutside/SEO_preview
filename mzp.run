@@ -1,0 +1,10 @@
+name "SEO_Preview"
+version 6.0
+
+copy SEO_preview.ms to $userScripts\SEO_Preview
+copy ffmpeg.exe to $userScripts\SEO_Preview
+copy palettFile.png to $userScripts\SEO_Preview
+drop "SEO_preview.ms"
+run "SEO_preview.ms"
+
+clear temp on reset 
