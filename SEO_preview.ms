@@ -271,7 +271,9 @@ icon: #("Render", 2)
 				print TargetPreviewFileName
 				local tmepgifFileName = "Temp.mp4"
 				deleteFile (TargetFolder + TargetPreviewFileName)
-				hiddenDOSCommand ("ffmpeg.exe -i " + MaxDefaultPreviewFile + " -y " + tmepgifFileName ) startpath:currentPath
+				--hiddenDOSCommand ("ffmpeg.exe -i " + MaxDefaultPreviewFile + " -y " + tmepgifFileName ) startpath:currentPath
+				-- h264규격 test
+				hiddenDOSCommand ("ffmpeg.exe -r 30 -i " + MaxDefaultPreviewFile + " -vcodec libx264 -crf 18 -pix_fmt yuv420p -y" + tmepgifFileName ) startpath:currentPath
 				copyFile (currentPath + "\\" + tmepgifFileName) (TargetFolder + TargetPreviewFileName)
 			)
 			if gif출력 do
@@ -287,7 +289,45 @@ icon: #("Render", 2)
 				copyFile tmepgifFileNameAndPaht gifFilePaht
 				deleteFile tmepgifFileNameAndPaht
 			)
-		)
+        )
+        fn BitMapPreviewExport percent_float:100 =
+        (
+            percent_float
+			bitmapFileName
+            -- 경로
+            deleteFolder folderPath:"c:\\GIFtemp"
+            makeDir ("c:\\GIFtemp\\") all:true
+            outFile = "c:\\GIFtemp\\temp"
+            exepath = "nconvert.exe"
+            exepath2 ="gifsicle.exe"
+			--화면
+			---- 뷰 사이즈를 렌더사이즈로 설정
+            local vp = getViewSize()
+            renderWidth = vp[1]
+            renderheight = vp[2]
+			completeRedraw();
+			---- 설정된 퍼센트로 조정
+			percent = (percent_float as integer) as string
+            Yp = ((vp[2] * percent_float / 100.0) as integer) as string
+            Xp = ((vp[1] * percent_float / 100.0) as integer) as string
+            -- 아마 퍼센트 조정을 nconvert 으로 변경해서 
+            ratio = vp[2] / vp[1]
+            local size = vp[2]
+			w = (size * ratio) as integer
+			-- 이미지 저장
+            startk = (animationrange.start as integer/1f as integer)
+            for t = animationrange.start to animationrange.end by 1f do
+            (
+                slidertime = t
+                x = (t as integer/1f as integer) --프레임 레이트가 다를경우 예방
+                bitmapFileName = formattedPrint (x - startk) format:"0.5d" -- 시작프레임 보정
+                img = Bitmap vp[1] vp[2] filename:(outFile + (bitmapFileName + ".bmp"))
+                copy (gw.getViewportDib()) img
+                save img
+			)
+			freeSceneBitmaps()
+			gc()
+        )
 		fn getNitous_setting =
 		(
 			driver_chk = NitrousGraphicsManager.IsEnabled()
