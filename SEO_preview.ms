@@ -273,7 +273,7 @@ icon: #("Render", 2)
 				deleteFile (TargetFolder + TargetPreviewFileName)
 				--hiddenDOSCommand ("ffmpeg.exe -i " + MaxDefaultPreviewFile + " -y " + tmepgifFileName ) startpath:currentPath
 				-- h264규격 test
-				hiddenDOSCommand ("ffmpeg.exe -r 30 -i " + MaxDefaultPreviewFile + " -vcodec libx264 -crf 18 -pix_fmt yuv420p -y" + tmepgifFileName ) startpath:currentPath
+				hiddenDOSCommand ("ffmpeg.exe -r 30 -i " + MaxDefaultPreviewFile + " -vcodec libx264 -crf 1 -pix_fmt yuv420p -y " + tmepgifFileName ) startpath:currentPath
 				copyFile (currentPath + "\\" + tmepgifFileName) (TargetFolder + TargetPreviewFileName)
 			)
 			if gif출력 do
