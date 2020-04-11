@@ -21,17 +21,17 @@ icon: #("Render", 2)
 		)
 		if m_CAData == undefined do
 		(
-			previewInit = attributes SEO_previewData version:6
+			previewInit = attributes SEO_previewData version:7
 			(
 				parameters main
 				(
 					viewportMode      type:#string    default:#view_none 
 					displayMode       type:#integer   default:2
-					percentSize       type:#float     default:100
+					percentSize       type:#float     default:50
 					isDspGrid         type:#boolean   default:false
 					isboneHide        type:#boolean   default:true
-					enableGif         type:#boolean   default:true
-					enableAvi         type:#boolean   default:false
+					enableGif         type:#boolean   default:false
+					enableAvi         type:#boolean   default:true
 					renderWidth       type:#float     default:1280
 					renderHeight      type:#float     default:720
 				)
@@ -396,8 +396,8 @@ icon: #("Render", 2)
 			checkbox dspBones_checkbox "Hide Bone" offset:[0,5] across:3
 			spinner	percentSize_spinner "1920*1080" range:[0, 100, percentSize_setting] type:#integer scale:1 fieldWidth:32 offset:[75,5]
 			label percent "%" offset:[40,5]
-			checkbox gif출력 "gif" offset:[0,0] checked:true across:3
-			checkbox avi출력 "avi" offset:[0,0]
+			checkbox gif출력 "gif" offset:[0,0] checked:false across:3
+			checkbox avi출력 "avi" offset:[0,0] checked:true
 			checkbox 재생하기 "자동재생" offset:[0,0]
 			label 재생하기text "자동재생은 맥스 기본 AutoPlay와 중복재생됨." offset:[0,0]
 			label 재생하기경고text2 "Folder를 선택시 AutoPlay Preview File을 꺼주세요." offset:[0,0]
