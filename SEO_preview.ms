@@ -1,7 +1,7 @@
 -- 프리뷰 1.1.2 gif-maker가 없을 경우 비활성화
 -- 1.1.3 랜더 사이즈 오류 수정중
 -- 2019-07-07 : attribute 활용
-
+-- 2020-04-22 : 폴더 변경
 macroScript PreviewTool
 category:"_AniSeoHyun"
 ToolTip:"PreviewTool"
@@ -223,7 +223,7 @@ icon: #("Render", 2)
 			local MaxDefaultPreviewFile
 			local TargetFolder
 			local TargetPreviewFileName
-			local currentPath = (GetDir #userscripts + "\\SEO_Preview")
+			local currentPath = (GetDir #userscripts + "\\SEP\\SEO_Preview")
 			renderWidth = 1920
 			renderHeight =  1080
 			renderPixelAspect = 1.00000
@@ -272,7 +272,7 @@ icon: #("Render", 2)
 				local tmepgifFileName = "Temp.mp4"
 				deleteFile (TargetFolder + TargetPreviewFileName)
 				--hiddenDOSCommand ("ffmpeg.exe -i " + MaxDefaultPreviewFile + " -y " + tmepgifFileName ) startpath:currentPath
-				-- h264규격 test
+				-- h264규격
 				hiddenDOSCommand ("ffmpeg.exe -r 30 -i " + MaxDefaultPreviewFile + " -vcodec libx264 -crf 1 -pix_fmt yuv420p -y " + tmepgifFileName ) startpath:currentPath
 				copyFile (currentPath + "\\" + tmepgifFileName) (TargetFolder + TargetPreviewFileName)
 			)
@@ -289,44 +289,6 @@ icon: #("Render", 2)
 				copyFile tmepgifFileNameAndPaht gifFilePaht
 				deleteFile tmepgifFileNameAndPaht
 			)
-        )
-        fn BitMapPreviewExport percent_float:100 =
-        (
-            percent_float
-			bitmapFileName
-            -- 경로
-            deleteFolder folderPath:"c:\\GIFtemp"
-            makeDir ("c:\\GIFtemp\\") all:true
-            outFile = "c:\\GIFtemp\\temp"
-            exepath = "nconvert.exe"
-            exepath2 ="gifsicle.exe"
-			--화면
-			---- 뷰 사이즈를 렌더사이즈로 설정
-            local vp = getViewSize()
-            renderWidth = vp[1]
-            renderheight = vp[2]
-			completeRedraw();
-			---- 설정된 퍼센트로 조정
-			percent = (percent_float as integer) as string
-            Yp = ((vp[2] * percent_float / 100.0) as integer) as string
-            Xp = ((vp[1] * percent_float / 100.0) as integer) as string
-            -- 아마 퍼센트 조정을 nconvert 으로 변경해서 
-            ratio = vp[2] / vp[1]
-            local size = vp[2]
-			w = (size * ratio) as integer
-			-- 이미지 저장
-            startk = (animationrange.start as integer/1f as integer)
-            for t = animationrange.start to animationrange.end by 1f do
-            (
-                slidertime = t
-                x = (t as integer/1f as integer) --프레임 레이트가 다를경우 예방
-                bitmapFileName = formattedPrint (x - startk) format:"0.5d" -- 시작프레임 보정
-                img = Bitmap vp[1] vp[2] filename:(outFile + (bitmapFileName + ".bmp"))
-                copy (gw.getViewportDib()) img
-                save img
-			)
-			freeSceneBitmaps()
-			gc()
         )
 		fn getNitous_setting =
 		(
@@ -396,9 +358,10 @@ icon: #("Render", 2)
 			checkbox dspBones_checkbox "Hide Bone" offset:[0,5] across:3
 			spinner	percentSize_spinner "1920*1080" range:[0, 100, percentSize_setting] type:#integer scale:1 fieldWidth:32 offset:[75,5]
 			label percent "%" offset:[40,5]
-			checkbox gif출력 "gif" offset:[0,0] checked:false across:3
+			checkbox gif출력 "gif" offset:[0,0] checked:false across:4
 			checkbox avi출력 "avi" offset:[0,0] checked:true
 			checkbox 재생하기 "자동재생" offset:[0,0]
+			checkbox ui_openFolderAuto "폴더열기" offset:[0,0]
 			label 재생하기text "자동재생은 맥스 기본 AutoPlay와 중복재생됨." offset:[0,0]
 			label 재생하기경고text2 "Folder를 선택시 AutoPlay Preview File을 꺼주세요." offset:[0,0]
 			--checkbox displayColor_checkbox "Object Color" offset:[0,5]
