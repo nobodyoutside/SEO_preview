@@ -223,7 +223,7 @@ icon: #("Render", 2)
 			local MaxDefaultPreviewFile
 			local TargetFolder
 			local TargetPreviewFileName
-			local currentPath = (GetDir #userscripts + "\\SEP\\SEO_Preview")
+			local currentPath = (GetDir #userscripts + "\\SEO\\SEO_Preview")
 			renderWidth = 1920
 			renderHeight =  1080
 			renderPixelAspect = 1.00000

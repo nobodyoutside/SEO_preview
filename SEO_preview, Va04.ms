@@ -334,8 +334,7 @@ icon: #("Render", 2)
             exepath2 ="gifsicle.exe"
             percent =(sld1.value as integer)as string
 
-            Yp = ((vp[2]*sld1.value/100.0) as integer)as string
-            Xp = ((vp[1]*sld1.value/100.0)as integer)as string
+
 
             ratio = vp[2]/vp[1]
             local size=vp[2]
