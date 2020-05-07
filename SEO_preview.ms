@@ -359,7 +359,7 @@ icon: #("Render", 2)
 			spinner	percentSize_spinner "1920*1080" range:[0, 100, percentSize_setting] type:#integer scale:1 fieldWidth:32 offset:[75,5]
 			label percent "%" offset:[40,5]
 			checkbox gif출력 "gif" offset:[0,0] checked:false across:4
-			checkbox avi출력 "avi" offset:[0,0] checked:true
+			checkbox avi출력 "mp4" offset:[0,0] checked:true
 			checkbox 재생하기 "자동재생" offset:[0,0]
 			checkbox ui_openFolderAuto "폴더열기" offset:[0,0]
 			label 재생하기text "자동재생은 맥스 기본 AutoPlay와 중복재생됨." offset:[0,0]
