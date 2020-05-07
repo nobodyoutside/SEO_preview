@@ -419,6 +419,10 @@ icon: #("Render", 2)
 					previewNow = (maxfilepath +(getFilenameFile maxFileName) + ".mp4")
 					ShellLaunch previewNow ""
 				)
+				if ui_openFolderAuto.state do 
+				(
+					ShellLaunch maxfilepath ""
+				)
 				DestroyDialog previewRollout
 			)
 			on exportMaxFile_btn pressed do
