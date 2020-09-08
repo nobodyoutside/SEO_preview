@@ -253,6 +253,10 @@ icon: #("Render", 2)
 			DialogMonitorOPS.enabled = false
 			--return()
 			MaxDefaultPreviewFile = ((getdir #preview) + "\\_scene.avi" )
+			if getMaxVarsion > 2019 do 
+			(
+				MaxDefaultPreviewFile = ""+ ((getdir #preview) + "\\" + (getFilenameFile maxFileName) + "_preview.avi" )				
+			)
 			TargetFolder = maxfilepath
 			-- 2019-03-12 FFmpeg
 			--TargetPreviewFileName = ((getFilenameFile maxFileName) + ".avi" )
