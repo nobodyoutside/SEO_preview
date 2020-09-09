@@ -217,7 +217,7 @@ icon: #("Render", 2)
 				true
 			)
 		)
-		fn PreviewExport_fn gif출력 avi출력=
+		fn PreviewExport_fn createGif createAvi=
 		( --1.3.3 버전용 --driver_chk
 			print "PreviewExport_fn start"
 			local MaxDefaultPreviewFile
@@ -253,42 +253,48 @@ icon: #("Render", 2)
 			DialogMonitorOPS.enabled = false
 			--return()
 			MaxDefaultPreviewFile = ((getdir #preview) + "\\_scene.avi" )
-			if getMaxVarsion > 2019 do 
-			(
-				MaxDefaultPreviewFile = ""+ ((getdir #preview) + "\\" + (getFilenameFile maxFileName) + "_preview.avi" )				
-			)
 			TargetFolder = maxfilepath
 			-- 2019-03-12 FFmpeg
 			--TargetPreviewFileName = ((getFilenameFile maxFileName) + ".avi" )
 			TargetPreviewFileName = ((getFilenameFile maxFileName) + ".mp4" )
 			--
-			createPreview percentSize:percentSize_setting start:(animationRange.start.frame as integer) end:(animationRange.end.frame as integer)  fps:fps_setting dspBones:dspBones_setting
-			if avi출력 do
+			if getMaxVarsion < 2020 then
+			(
+				createPreview percentSize:percentSize_setting start:(animationRange.start.frame as integer) end:(animationRange.end.frame as integer)  fps:fps_setting dspBones:dspBones_setting
+			)
+			else
+			(
+				createPreview percentSize:percentSize_setting start:(animationRange.start.frame as integer) end:(animationRange.end.frame as integer)  fps:fps_setting dspBones:dspBones_setting filename:MaxDefaultPreviewFile 
+			)
+			if createAvi do
 			(
 				/* 2019-03-12백업
 				deleteFile (TargetFolder + TargetPreviewFileName)
 				copyFile MaxDefaultPreviewFile (TargetFolder + TargetPreviewFileName)
 				*/
 				-- 2019-03-12 FFmpeg mp4만들기
-				print "--avi출력--"
+				print "--createAvi--"
 				print MaxDefaultPreviewFile
 				print TargetPreviewFileName
+				print currentPath
 				local tmepgifFileName = "Temp.mp4"
 				deleteFile (TargetFolder + TargetPreviewFileName)
 				--hiddenDOSCommand ("ffmpeg.exe -i " + MaxDefaultPreviewFile + " -y " + tmepgifFileName ) startpath:currentPath
 				-- h264규격
-				hiddenDOSCommand ("ffmpeg.exe -r 30 -i " + MaxDefaultPreviewFile + " -vcodec libx264 -crf 1 -pix_fmt yuv420p -y " + tmepgifFileName ) startpath:currentPath
+				isFile = hiddenDOSCommand ("ffmpeg.exe -r 30 -i \"" + MaxDefaultPreviewFile + "\" -vcodec libx264 -crf 1 -pix_fmt yuv420p -y " + tmepgifFileName ) startpath:currentPath
+				if isFile do print "Create Temp.mp4"
+				if doesFileExist (currentPath + "\\" + tmepgifFileName) do print "is Temp.mp4"
 				copyFile (currentPath + "\\" + tmepgifFileName) (TargetFolder + TargetPreviewFileName)
 			)
-			if gif출력 do
+			if createGif do
 			(
 				local gifFilePaht = (TargetFolder + (getFilenameFile maxFileName)+".gif")
 				local tmepgifFileName = "Temp.gif"
 				local tmepgifFileNameAndPaht = (currentPath + "\\"+tmepgifFileName)
 				local palettTempFileName = "palettFile.png"
 				local 필터내용 = " -y -filter_complex paletteuse=dither=bayer:bayer_scale=5:diff_mode=rectangle "
-				hiddenDOSCommand ("ffmpeg.exe -i "+ MaxDefaultPreviewFile + " -y -vf fps=15,scale=400:-1:flags=lanczos,palettegen=stats_mode=diff palettFile.png") startpath:currentPath
-				hiddenDOSCommand ("ffmpeg.exe -i "+ MaxDefaultPreviewFile + " -i " + palettTempFileName + 필터내용 + tmepgifFileName ) startpath:currentPath
+				hiddenDOSCommand ("ffmpeg.exe -i \""+ MaxDefaultPreviewFile + "\" -y -vf fps=15,scale=400:-1:flags=lanczos,palettegen=stats_mode=diff palettFile.png") startpath:currentPath
+				hiddenDOSCommand ("ffmpeg.exe -i \""+ MaxDefaultPreviewFile + "\" -i " + palettTempFileName + 필터내용 + tmepgifFileName ) startpath:currentPath
 				deleteFile gifFilePaht
 				copyFile tmepgifFileNameAndPaht gifFilePaht
 				deleteFile tmepgifFileNameAndPaht
@@ -362,8 +368,8 @@ icon: #("Render", 2)
 			checkbox dspBones_checkbox "Hide Bone" offset:[0,5] across:3
 			spinner	percentSize_spinner "1920*1080" range:[0, 100, percentSize_setting] type:#integer scale:1 fieldWidth:32 offset:[75,5]
 			label percent "%" offset:[40,5]
-			checkbox gif출력 "gif" offset:[0,0] checked:false across:4
-			checkbox avi출력 "mp4" offset:[0,0] checked:true
+			checkbox createGif "gif" offset:[0,0] checked:false across:4
+			checkbox createAvi "mp4" offset:[0,0] checked:true
 			checkbox 재생하기 "자동재생" offset:[0,0]
 			checkbox ui_openFolderAuto "폴더열기" offset:[0,0]
 			label 재생하기text "자동재생은 맥스 기본 AutoPlay와 중복재생됨." offset:[0,0]
@@ -398,8 +404,8 @@ icon: #("Render", 2)
 			(
 				m_CAData.percentSize = percentSize_spinner.value
 				m_CAData.isboneHide = dspBones_checkbox.state
-				m_CAData.enableGif = gif출력.state
-				m_CAData.enableAvi = avi출력.state
+				m_CAData.enableGif = createGif.state
+				m_CAData.enableAvi = createAvi.state
 				m_CAData.displayMode = display_select.state
 				max hold
 			)
@@ -412,13 +418,13 @@ icon: #("Render", 2)
 			on previewFileExport_btn pressed do
 			(--PreviewExport_fn
 				local previewNow
-				PreviewExport_fn gif출력.state avi출력.state
-				if 재생하기.state and gif출력.state do
+				PreviewExport_fn createGif.state createAvi.state
+				if 재생하기.state and createGif.state do
 				(
 					previewNow = (maxfilepath +(getFilenameFile maxFileName) + ".gif")
 					ShellLaunch previewNow ""
 				)
-				if 재생하기.state and avi출력.state do
+				if 재생하기.state and createAvi.state do
 				(
 					previewNow = (maxfilepath +(getFilenameFile maxFileName) + ".mp4")
 					ShellLaunch previewNow ""
@@ -446,7 +452,7 @@ icon: #("Render", 2)
 					(
 						loadmaxfile obj useFileUnits:true quiet:true -- 파일을 열때 물어보는것 없이 연다.
 						completeredraw()
-						PreviewExport_fn gif출력.state avi출력.state
+						PreviewExport_fn createGif.state createAvi.state
 					)
 				)
 			) -- PreviewExport_fn()
@@ -469,8 +475,8 @@ icon: #("Render", 2)
 			percentSize_setting = percentSize_spinner.value
 			hideByCategory.bones = m_CAData.isboneHide --기본값으로 본을 숨겨줌
 			dspBones_checkbox.state = hideByCategory.bones
-			gif출력.state = m_CAData.enableGif
-			avi출력.state = m_CAData.enableAvi
+			createGif.state = m_CAData.enableGif
+			createAvi.state = m_CAData.enableAvi
 			display_select.state = m_CAData.displayMode
 			DisplaySelect_fn display_select.state
 			if (displaySafeFrames == false) do 	max safeframe toggle
