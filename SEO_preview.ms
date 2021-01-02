@@ -253,6 +253,8 @@ icon: #("Render", 2)
 			DialogMonitorOPS.enabled = false
 			--return()
 			MaxDefaultPreviewFile = ((getdir #preview) + "\\_scene.avi" )
+			-- 이전파일과 머쥐 되는 현상이 있어서 우선 삭제 시켜줌.
+			deleteFile MaxDefaultPreviewFile
 			TargetFolder = maxfilepath
 			-- 2019-03-12 FFmpeg
 			--TargetPreviewFileName = ((getFilenameFile maxFileName) + ".avi" )
@@ -274,20 +276,25 @@ icon: #("Render", 2)
 				*/
 				-- 2019-03-12 FFmpeg mp4만들기
 				print "--createAvi--"
-				print MaxDefaultPreviewFile
-				print TargetPreviewFileName
-				print currentPath
+				print "MaxDefaultPreviewFile : " + MaxDefaultPreviewFile
+				print "TargetPreviewFileName :" + TargetPreviewFileName
+				print "currentPath : " + currentPath
 				local tmepgifFileName = "Temp.mp4"
-				deleteFile (TargetFolder + TargetPreviewFileName)
+				outputFilePath = pathConfig.appendPath TargetFolder TargetPreviewFileName
+				tempFilePath = pathConfig.appendPath currentPath tmepgifFileName
+				-- 기존 파일 삭제
+				deleteFile outputFilePath
+				deleteFile tempFilePath
 				--hiddenDOSCommand ("ffmpeg.exe -i " + MaxDefaultPreviewFile + " -y " + tmepgifFileName ) startpath:currentPath
 				-- h264규격
 				isFile = hiddenDOSCommand ("ffmpeg.exe -r 30 -i \"" + MaxDefaultPreviewFile + "\" -vcodec libx264 -crf 1 -pix_fmt yuv420p -y " + tmepgifFileName ) startpath:currentPath
 				if isFile do print "Create Temp.mp4"
-				if doesFileExist (currentPath + "\\" + tmepgifFileName) do print "is Temp.mp4"
-				copyFile (currentPath + "\\" + tmepgifFileName) (TargetFolder + TargetPreviewFileName)
+				if doesFileExist tempFilePath do print "is Temp.mp4"
+				copyFile tempFilePath outputFilePath
 			)
 			if createGif do
 			(
+				print ("Gif 실행 \n")
 				local gifFilePaht = (TargetFolder + (getFilenameFile maxFileName)+".gif")
 				local tmepgifFileName = "Temp.gif"
 				local tmepgifFileNameAndPaht = (currentPath + "\\"+tmepgifFileName)
@@ -508,7 +515,6 @@ icon: #("Render", 2)
 			)
 		)
 	)
-
 	createdialog previewRollout 300 250
 )
  if queryBox  "PreviewTool스크립트가 메뉴의 Customize - Customize User Interface 의 _AniSeoHyun 카테고리에 설치되었습니다. 설정창을 열겠습니까?" title:"Preview 등록" beep:false then
