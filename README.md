@@ -1,4 +1,5 @@
 # SEO_preview
+- https://github.com/nobodyInbody/SEO_preview
 뷰리뷰 애니메이션을 빠르기 만들기(Quick preview)
 > ffmpeg.exe을 사용함  
 > 한글 사용으로 인해 Preference Settings 설정 필요.(하단의 이미지 참조)
