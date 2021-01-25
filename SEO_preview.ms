@@ -2,6 +2,7 @@
 -- 1.1.3 랜더 사이즈 오류 수정중
 -- 2019-07-07 : attribute 활용
 -- 2020-04-22 : 폴더 변경
+-- 2021-01-25 : 프레임표시 설정 추가
 macroScript PreviewTool
 category:"_AniSeoHyun"
 ToolTip:"PreviewTool"
@@ -10,6 +11,7 @@ icon: #("Render", 2)
 	fn fn_getCustAttributeData =
 	(
 		-- custAttributes data 불러오기 및 추가ㅣ
+		local dataVersion = 8
 		local rootAttributCount = 1
 		local getCustAttribute = "SEO_previewData"
 		local m_CAData = undefined
@@ -19,21 +21,23 @@ icon: #("Render", 2)
 			if Tempm_CAData.name == getCustAttribute do m_CAData = Tempm_CAData
 			rootAttributCount += 1
 		)
-		if m_CAData == undefined do
+		if (m_CAData == undefined) or (m_CAData.version < dataVersion) do
 		(
-			previewInit = attributes SEO_previewData version:7
+			-- version은 변수로 대입이 안되네; 그래서 dataVersion의 상수를 그대로 씀.
+			previewInit = attributes SEO_previewData version:8
 			(
 				parameters main
 				(
-					viewportMode      type:#string    default:#view_none 
-					displayMode       type:#integer   default:2
-					percentSize       type:#float     default:50
-					isDspGrid         type:#boolean   default:false
-					isboneHide        type:#boolean   default:true
-					enableGif         type:#boolean   default:false
-					enableAvi         type:#boolean   default:true
-					renderWidth       type:#float     default:1280
-					renderHeight      type:#float     default:720
+					viewportMode               type:#string    default:#view_none 
+					displayMode                type:#integer   default:2
+					percentSize                type:#float     default:50
+					enableDisplayFrame         type:#boolean   default:true
+					isDspGrid                  type:#boolean   default:false
+					isboneHide                 type:#boolean   default:true
+					enableGif                  type:#boolean   default:false
+					enableAvi                  type:#boolean   default:true
+					renderWidth                type:#float     default:1280
+					renderHeight               type:#float     default:720
 				)
 			)
 			CustAttributes.add rootscene previewInit
@@ -53,6 +57,7 @@ icon: #("Render", 2)
 		local selectedLevel = #smoothhighlights
 		local m_viewMode_int = 0
 		local dspBones_setting = false
+		local m_enableDisplayFrame = false
 		local currentBone = hideByCategory.bones
 		local m_currentRenderWidth = renderWidth
 		local m_currentRenderHight = renderHeight
@@ -266,7 +271,7 @@ icon: #("Render", 2)
 			)
 			else
 			(
-				createPreview percentSize:percentSize_setting start:(animationRange.start.frame as integer) end:(animationRange.end.frame as integer)  fps:fps_setting dspBones:dspBones_setting filename:MaxDefaultPreviewFile 
+				createPreview percentSize:percentSize_setting start:(animationRange.start.frame as integer) end:(animationRange.end.frame as integer)  fps:fps_setting dspBones:dspBones_setting dspFrameNums:m_enableDisplayFrame filename:MaxDefaultPreviewFile 
 			)
 			if createAvi do
 			(
@@ -385,6 +390,7 @@ icon: #("Render", 2)
 			--checkbox percentSize_checkbos "비활성화" offset:[0,5]
 			radiobuttons display_select labels:#("Color","Material","Clay") default:2 columns:3 across:2 offset:[20,0]
 			button saveSetting_btn "설정 저장" offset:[20,0] tooltip:"설정을 파일별로 저장"
+			checkbox ui_enableDisplayFrame "Fps 표시" offset:[0,0]
 	
 			on dspBones_checkbox changed state do
 			(
@@ -403,6 +409,10 @@ icon: #("Render", 2)
 			(
 				DisplaySelect_fn state
 			)
+			on ui_enableDisplayFrame changed state do
+			(
+				m_enableDisplayFrame =  state
+			)
 			on percentSize_spinner changed state do
 			(
 				percentSize_setting = percentSize_spinner.range[3] as integer
@@ -414,6 +424,7 @@ icon: #("Render", 2)
 				m_CAData.enableGif = createGif.state
 				m_CAData.enableAvi = createAvi.state
 				m_CAData.displayMode = display_select.state
+				m_CAData.enableDisplayFrame = ui_enableDisplayFrame.state
 				max hold
 			)
 		)
@@ -485,6 +496,12 @@ icon: #("Render", 2)
 			createGif.state = m_CAData.enableGif
 			createAvi.state = m_CAData.enableAvi
 			display_select.state = m_CAData.displayMode
+			-- 8버전부터 있는 값
+			if m_CAData.version > 7 do 
+			(
+				ui_enableDisplayFrame.state = m_CAData.enableDisplayFrame
+				m_enableDisplayFrame = m_CAData.enableDisplayFrame
+			)
 			DisplaySelect_fn display_select.state
 			if (displaySafeFrames == false) do 	max safeframe toggle
 			--if driver_chk == true do
