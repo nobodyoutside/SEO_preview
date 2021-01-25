@@ -1,6 +1,6 @@
 @edho off
 SET ARCHIVE="C:\Program Files\7-Zip\7z.exe"
-SET PARAMETERS=a
+SET PARAMETERS=a -tzip
 REM English OS = MM/DD/YYYY 
 REM FOR /F "tokens=2-6 delims=/ " %%i IN ('date /t') DO SET MZP_FILE=SEO_preview_%%k%%i%%j.mzp
 REM Korean OS = YYYY-MM-DD 
