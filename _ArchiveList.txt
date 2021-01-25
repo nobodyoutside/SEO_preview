@@ -1,0 +1,4 @@
+ffmpeg.exe
+mzp.run
+palettFile.png
+SEO_preview.ms
