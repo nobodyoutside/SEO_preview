@@ -50,8 +50,8 @@ icon: #("Render", 2)
 	(
 		local m_CAData = undefined
 		local getDirPath = undefined
-		local fileNameFile_arr = #()
-		local maxfileName_arr = #()
+		local previewFileName = getFilenameFile maxfileName
+		local previewMaxlist = #()
 		--view관련 설정
 		local viewport_tag = #view_none
 		local selectedLevel = #smoothhighlights
@@ -263,7 +263,7 @@ icon: #("Render", 2)
 			TargetFolder = maxfilepath
 			-- 2019-03-12 FFmpeg
 			--TargetPreviewFileName = ((getFilenameFile maxFileName) + ".avi" )
-			TargetPreviewFileName = ((getFilenameFile maxFileName) + ".mp4" )
+			TargetPreviewFileName = (previewFileName + ".mp4" )
 			--
 			if getMaxVarsion < 2020 then
 			(
@@ -300,7 +300,7 @@ icon: #("Render", 2)
 			if createGif do
 			(
 				print ("Gif 실행 \n")
-				local gifFilePaht = (TargetFolder + (getFilenameFile maxFileName)+".gif")
+				local gifFilePaht = (TargetFolder + previewFileName + ".gif")
 				local tmepgifFileName = "Temp.gif"
 				local tmepgifFileNameAndPaht = (currentPath + "\\"+tmepgifFileName)
 				local palettTempFileName = "palettFile.png"
@@ -433,18 +433,23 @@ icon: #("Render", 2)
 			button exportMaxFile_btn "파일 경로 열기" width:80 offset:[-85, 0]
 			button previewFolderExport_btn "Folder 만들기" width:80 offset:[0, -26.5]
 			button previewFileExport_btn "File 만들기" width:80 offset:[85, -26.5]
+			edittext previewFileName_edit "파일명:" text:previewFileName width:275
+			on previewFileName_edit entered txt do
+			(
+				previewFileName = txt
+			)
 			on previewFileExport_btn pressed do
 			(--PreviewExport_fn
 				local previewNow
 				PreviewExport_fn createGif.state createAvi.state
 				if 재생하기.state and createGif.state do
 				(
-					previewNow = (maxfilepath +(getFilenameFile maxFileName) + ".gif")
+					previewNow = (maxfilepath + previewFileName + ".gif")
 					ShellLaunch previewNow ""
 				)
 				if 재생하기.state and createAvi.state do
 				(
-					previewNow = (maxfilepath +(getFilenameFile maxFileName) + ".mp4")
+					previewNow = (maxfilepath + previewFileName + ".mp4")
 					ShellLaunch previewNow ""
 				)
 				if ui_openFolderAuto.state do 
@@ -483,7 +488,7 @@ icon: #("Render", 2)
 			currentLightLevel = lightLevel
 			currentDiplaycolor = displayColor.shaded
 			currentSefeFrame = displaySafeFrames
-			
+			previewFileName = getFilenameFile maxfileName
 			--
 			m_currentRenderWidth = renderWidth
 			m_currentRenderHight = renderHeight
