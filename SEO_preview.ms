@@ -299,7 +299,7 @@ icon: #("Render", 2)
 			)
 			if createGif do
 			(
-				print ("Gif 실행 \n")
+				print ("Gif 실행")
 				local gifFilePaht = (TargetFolder + previewFileName + ".gif")
 				local tmepgifFileName = "Temp.gif"
 				local tmepgifFileNameAndPaht = (currentPath + "\\"+tmepgifFileName)
@@ -539,11 +539,24 @@ icon: #("Render", 2)
 	)
 	createdialog previewRollout 300 250
 )
- if queryBox  "PreviewTool스크립트가 메뉴의 Customize - Customize User Interface 의 _AniSeoHyun 카테고리에 설치되었습니다. 설정창을 열겠습니까?" title:"Preview 등록" beep:false then
-(
-	actionMan.executeAction 0 "59226"
-)
-else
-(
+--  if queryBox  "PreviewTool스크립트가 메뉴의 Customize - Customize User Interface 의 _AniSeoHyun 카테고리에 설치되었습니다. 설정창을 열겠습니까?" title:"Preview 등록" beep:false then
+-- (
+-- 	actionMan.executeAction 0 "59226"
+-- )
+-- else
+-- (
 
-) 
+-- ) 
+manu = SEO_CORE_FILE()
+if manu != undefined do (
+	if queryBox  "상단의 메인 메뉴에 등록하시겠습니까?" title:"Preview 등록" beep:false then
+	(
+
+			manu.AddMainMenuItem("PreviewTool")
+		)
+	)
+	else
+	(
+
+	)
+)
