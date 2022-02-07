@@ -11,7 +11,7 @@ icon: #("Render", 2)
 	fn fn_getCustAttributeData =
 	(
 		-- custAttributes data 불러오기 및 추가ㅣ
-		local dataVersion = 8
+		local dataVersion = 9
 		local rootAttributCount = 1
 		local getCustAttribute = "SEO_previewData"
 		local m_CAData = undefined
@@ -23,8 +23,8 @@ icon: #("Render", 2)
 		)
 		if (m_CAData == undefined) or (m_CAData.version < dataVersion) do
 		(
-			-- version은 변수로 대입이 안되네; 그래서 dataVersion의 상수를 그대로 씀.
-			previewInit = attributes SEO_previewData version:8
+			-- version값 은 dataVersion 변수로 대입이 안되서 직접 입력
+			previewInit = attributes SEO_previewData version:9
 			(
 				parameters main
 				(
